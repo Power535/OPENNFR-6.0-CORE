@@ -1,0 +1,212 @@
+DESCRIPTION = "OPENNFR Image"
+SECTION = "base"
+PRIORITY = "required"
+MAINTAINER = "OPENNFR team"
+
+LICENSE = "MIT"
+
+LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
+file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
+
+require conf/license/license-gplv2.inc
+
+PV = "${IMAGE_VERSION}"
+PR = "${BUILD_VERSION}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+PR[vardepsxeclude] += "DATE"
+
+IMAGE_INSTALL = "opennfr-base \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-smbfs-utils \
+    packagegroup-base-nfs \
+    "
+    
+export IMAGE_BASENAME = "opennfr-image"
+IMAGE_LINGUAS = ""
+
+IMAGE_FEATURES += "package-management"	
+
+inherit image
+
+
+rootfs_postprocess() {
+			curdir=$PWD
+			cd ${IMAGE_ROOTFS}
+			# because we're so used to it
+			ln -s opkg usr/bin/ipkg || true
+			ln -s opkg-cl usr/bin/ipkg-cl || true
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/media
+			mkdir -p ${IMAGE_ROOTFS}/media/card
+			mkdir -p ${IMAGE_ROOTFS}/media/cf
+			mkdir -p ${IMAGE_ROOTFS}/media/hdd
+			mkdir -p ${IMAGE_ROOTFS}/media/net
+			mkdir -p ${IMAGE_ROOTFS}/media/upnp
+			mkdir -p ${IMAGE_ROOTFS}/media/usb
+			mkdir -p ${IMAGE_ROOTFS}/media/usb1
+			mkdir -p ${IMAGE_ROOTFS}/media/usb2
+			mkdir -p ${IMAGE_ROOTFS}/media/usb3
+			touch ${IMAGE_ROOTFS}/media/hdd/.fstab
+			touch ${IMAGE_ROOTFS}/media/usb/.fstab
+			touch ${IMAGE_ROOTFS}/media/usb1/.fstab
+			touch ${IMAGE_ROOTFS}/media/net/.fstab
+			cd $curdir
+			
+			cd ${IMAGE_ROOTFS}/etc
+			rm -rf ${IMAGE_ROOTFS}/etc/passwd
+			rm -rf ${IMAGE_ROOTFS}/etc/shadow
+			mv ${IMAGE_ROOTFS}/etc/passwd-neu ${IMAGE_ROOTFS}/etc/passwd
+			mv ${IMAGE_ROOTFS}/etc/shadow-neu ${IMAGE_ROOTFS}/etc/shadow
+			rm -rf ${IMAGE_ROOTFS}/etc/passwd-neu
+			rm -rf ${IMAGE_ROOTFS}/etc/shadow-neu
+			mv ${IMAGE_ROOTFS}/etc/pwd.lock ${IMAGE_ROOTFS}/etc/.pwd.lock
+			cd $curdir
+
+
+			if [ "${BRAND_OEM}" = "ini" ]; then
+				cd ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4			
+				rm -rf ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4/rc.png		
+				mv ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4/rc-neu.png ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4/rc.png			
+				rm -rf ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4/rc-neu.png
+			else
+				cd ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models
+				rm -rf ${IMAGE_ROOTFS}/usr/share/enigma2/rc_models/ini4
+			fi
+			cd $curdir
+
+
+			cd ${IMAGE_ROOTFS}/var/lib/opkg/lists
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-3rdparty
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-all
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}_3rdparty
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-mips32el
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINEBUILD}
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sh4
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162_3rdparty
+			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sparktriplex
+			cd $curdir
+			
+			cd ${IMAGE_ROOTFS}/etc/network	
+			rm -rf ${IMAGE_ROOTFS}/etc/network/interfaces
+			mv ${IMAGE_ROOTFS}/etc/network/interfaces-neu ${IMAGE_ROOTFS}/etc/network/interfaces
+			rm -rf ${IMAGE_ROOTFS}/etc/network/interfaces-neu
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/share/enigma2/po/de/LC_MESSAGES		
+			rm -rf ${IMAGE_ROOTFS}/usr/share/enigma2/po/de/LC_MESSAGES/enigma2.mo
+			mv ${IMAGE_ROOTFS}/usr/share/enigma2/po/de/LC_MESSAGES/enigma2-neu.mo ${IMAGE_ROOTFS}/usr/share/enigma2/po/de/LC_MESSAGES/enigma2.mo
+			rm -rf ${IMAGE_ROOTFS}/usr/share/enigma2/po/de/LC_MESSAGES/enigma2-neu.mo
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/lib
+			ln -s ${IMAGE_ROOTFS}/usr/lib/libbz2.so.0.0.0 ${IMAGE_ROOTFS}/usr/lib/libbz2.so.1.0 || true
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/emu
+			if [ "${BRAND_OEM}" = "fulan" ]; then
+				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz				
+			else
+				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz
+			fi	
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web
+			rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.pyo
+			rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.py
+			mv ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client-neu.py ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client.py
+			rm -rf ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web/client-neu.py
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/var
+			mkdir ${IMAGE_ROOTFS}/var/volatile/run
+			cp ${IMAGE_ROOTFS}/var/smbd.pid ${IMAGE_ROOTFS}/var/volatile/run/smbd.pid
+			cp ${IMAGE_ROOTFS}/var/nmbd.pid ${IMAGE_ROOTFS}/var/volatile/run/nmbd.pid
+			rm -rf ${IMAGE_ROOTFS}/var/smbd.pid
+			rm -rf ${IMAGE_ROOTFS}/var/nmbd.pid
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter
+			if [ "${BRAND_OEM}" = "fulan" ]; then
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-sh4.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/
+			        mv ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-sh4 ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-mips.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-sh4.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-sh4		
+			else
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-mips.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/ 
+			        mv ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-mips ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-sh4.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-mips.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Components/Converter/bitratecalc.so-mips
+			fi	
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data
+			if [ "${BRAND_OEM}" = "fulan" ]; then
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/iperf.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unrar-free.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unzip.tar.gz			
+			else
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/iperf.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unrar-free.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unzip.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/iperf.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unrar-free.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/Infopanel/data/unzip.tar.gz	
+			fi	
+			cd $curdir
+
+			cd ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin
+			if [ "${BRAND_OEM}" = "fulan" ]; then
+				touch ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/sh4_1.txt
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/nfr4xbm.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/fbclear.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/ubi_reader
+			else
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/nfr4xbm.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/fbclear.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin
+				tar xvpzf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/ubi_reader/ubifs/lzo.so.tar.gz -C ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/ubi_reader/ubifs
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/nfr4xbm.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/bin/fbclear.tar.gz
+				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/ubi_reader/ubifs/lzo.so.tar.gz
+			fi	
+			cd $curdir
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+
+export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
+
+do_generate_nfo() {
+			VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
+			echo "Enigma2: ${VER}" > ${NFO}
+			echo "Machine: ${MACHINE}" >> ${NFO}
+			DATE=`date +%Y-%m-%d' '%H':'%M`
+			echo "Date: ${DATE}" >> ${NFO}
+			echo "Issuer: OPENNFR" >> ${NFO}
+			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
+			if [ "${DESC}" != "" ]; then
+					echo "Description: ${DESC}" >> ${NFO}
+					echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
+			fi
+			MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
+			echo "MD5: ${MD5SUM}" >> ${NFO}
+}
+
+addtask generate_nfo after do_rootfs

@@ -1,0 +1,3 @@
+[submodule "meta-oe/recipes-oe-alliance/enigma2-plugins/e2openplugins"]
+	path = meta-oe/recipes-oe-alliance/enigma2-plugins/e2openplugins
+	url = git://github.com/schleichdi2/opennfr-build/meta-oe-alliance/meta-oe/recipes-oe-alliance/enigma2-plugins/e2openplugins
