@@ -1,0 +1,1 @@
+# OPENNFR-6.0-CORE
