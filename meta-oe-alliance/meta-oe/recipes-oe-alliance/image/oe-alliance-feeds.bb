@@ -51,6 +51,7 @@ RDEPENDS_${PN} = " \
     autofs \
     autossh \
     avahi-ui \
+    astra-sm \
     binutils \
     ctorrent \
     cups \
@@ -112,7 +113,6 @@ RDEPENDS_${PN} = " \
     vim \
     wakelan \
     wget \
-    xfsprogs \
     zeroconf \
     "
 
