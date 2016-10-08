@@ -62,11 +62,10 @@ IMAGE_CMD_ubi_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/*.zip /media/harry/UBUNTU/OPENNFR-6.0/image-zips/; \ 
     "
 
 
-MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080"
+MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080 linuxwifi"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

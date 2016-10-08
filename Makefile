@@ -151,6 +151,9 @@ MACHINEBUILD=tmnanoseplus
 else ifeq ($(MACHINEBUILD),tmnanosem2)
 MACHINE=dags7362
 MACHINEBUILD=tmnanosem2
+else ifeq ($(MACHINEBUILD),tmnanosem2plus)
+MACHINE=dags7362
+MACHINEBUILD=tmnanosem2plus
 else ifeq ($(MACHINEBUILD),tmnanosecombo)
 MACHINE=dags7362
 MACHINEBUILD=tmnanosecombo
@@ -410,6 +413,9 @@ MACHINEBUILD=mutant1200
 else ifeq ($(MACHINEBUILD),mutant500c)
 MACHINE=hd500c
 MACHINEBUILD=mutant500c
+else ifeq ($(MACHINEBUILD),mutant530c)
+MACHINE=hd530c
+MACHINEBUILD=mutant530c
 else ifeq ($(MACHINEBUILD),mutant51)
 MACHINE=hd51
 MACHINEBUILD=mutant51
@@ -606,6 +612,9 @@ MACHINEBUILD=spycat
 else ifeq ($(MACHINEBUILD),spycatmini)
 MACHINE=xc7362
 MACHINEBUILD=spycatmini
+else ifeq ($(MACHINEBUILD),spycatminiplus)
+MACHINE=xc7362
+MACHINEBUILD=spycatminiplus
 else ifeq ($(MACHINEBUILD),osmini)
 MACHINE=xc7362
 MACHINEBUILD=osmini
@@ -618,6 +627,9 @@ MACHINEBUILD=bcm7358
 else ifeq ($(MACHINEBUILD),vp7358ci)
 MACHINE=xc7358ci
 MACHINEBUILD=vp7358ci
+else ifeq ($(MACHINEBUILD),osmega)
+MACHINE=xc7346
+MACHINEBUILD=osmega
 
 else ifeq ($(MACHINEBUILD),gb800se)
 MACHINE=gb7325
