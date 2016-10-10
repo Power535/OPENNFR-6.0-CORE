@@ -22,7 +22,7 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/entwopia/ch625lc/ch625lc-linux-4.0.1-base-20160525.tgz \
+SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://iosched-slice_idle-1.patch \
