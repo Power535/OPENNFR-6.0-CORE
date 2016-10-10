@@ -191,5 +191,5 @@ IMAGE_CMD_ubi_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
-    cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR-6.0/image-zips/; \  
+    cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR6.0/image-zips/; \  
     "
