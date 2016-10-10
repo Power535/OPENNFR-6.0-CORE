@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRCNAME = "pyOpenSSL"
 
-DEPENDS = "openssl python-native python-cffi-native python-pycparser-native python-six python-enum34 python-pyasn1"
-RDEPENDS_${PN} = "python-threading python-six python-cffi python-pycparser python-cryptography"
+DEPENDS = "openssl python-native python-cffi-native python-pycparser-native python-six python-enum34 python-pyasn1 python-service-identity"
+RDEPENDS_${PN} = "python-threading python-six python-cffi python-pycparser python-cryptography python-service-identity"
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-${PV}.tar.gz"
 SRC_URI[md5sum] = "8579ff3a1d858858acfba5f046a4ddf7"
