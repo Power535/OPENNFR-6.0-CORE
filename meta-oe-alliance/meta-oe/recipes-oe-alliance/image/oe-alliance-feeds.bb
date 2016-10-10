@@ -99,6 +99,7 @@ RDEPENDS_${PN} = " \
     python-requests \
     python-ujson \
     python-singledispatch \
+    python-service-identity \   
     rsync \
     rtorrent \
     sabnzbd \
