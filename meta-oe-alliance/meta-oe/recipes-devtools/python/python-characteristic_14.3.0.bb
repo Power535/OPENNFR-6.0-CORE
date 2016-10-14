@@ -12,6 +12,6 @@ SRC_URI = "http://axforum.de/openpli/python-characteristic_14.3.0.orig.tar.gz"
 
 S = "${WORKDIR}/python-characteristic-${PV}"
 
-inherit setuptools
+inherit pypi
 
 include python-package-split.inc
