@@ -14,6 +14,6 @@ SRC_URI = "http://axforum.de/openpli/pyasn1-modules-0.0.8.tar.gz"
 
 S = "${WORKDIR}/pyasn1-modules-${PV}"
 
-inherit setuptools
+inherit pypi
 
 include python-package-split.inc
