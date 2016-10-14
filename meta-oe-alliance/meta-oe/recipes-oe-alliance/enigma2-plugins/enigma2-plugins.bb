@@ -124,3 +124,5 @@ python populate_packages_prepend() {
     for package in bb.data.getVar('PACKAGES', d, 1).split():
         getControlLines(mydir, d, package.split('-'))
 }
+
+INSANE_SKIP_${PN} += "build-deps"
