@@ -12,6 +12,6 @@ SRC_URI = "http://axforum.de/openpli/python-attrs_16.0.0.orig.tar.gz"
 
 S = "${WORKDIR}/python-attrs-${PV}"
 
-inherit setuptools
+inherit pypi
 
 include python-package-split.inc
