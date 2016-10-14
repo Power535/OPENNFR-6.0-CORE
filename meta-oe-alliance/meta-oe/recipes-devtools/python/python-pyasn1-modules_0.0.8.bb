@@ -10,9 +10,10 @@ RDEPENDS_${PN} = "python-pyasn1"
 
 PR = "r0"
 
-SRC_URI = "https://www.dropbox.com/s/06nkpcg517rq1by/pyasn1-modules-0.0.8.tar.gz?dl=0"
+SRC_URI = "http://axforum.de/openpli/pyasn1-modules-0.0.8.tar.gz"
 
 S = "${WORKDIR}/pyasn1-modules-${PV}"
 
+inherit setuptools
 
 include python-package-split.inc
