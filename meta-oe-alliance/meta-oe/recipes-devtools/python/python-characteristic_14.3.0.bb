@@ -12,6 +12,4 @@ SRC_URI = "https://www.dropbox.com/s/zwnkwuoxeeqixw8/python-characteristic_14.3.
 
 S = "${WORKDIR}/python-characteristic-${PV}"
 
-inherit setuptools
-
 include python-package-split.inc
