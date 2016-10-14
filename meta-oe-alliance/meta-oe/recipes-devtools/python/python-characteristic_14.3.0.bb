@@ -8,8 +8,10 @@ SRC_URI[sha256sum] = "ded68d4e424115ed44e5c83c2a901a0b6157a959079d7591d92106ffd3
 
 PR = "r0"
 
-SRC_URI = "https://www.dropbox.com/s/zwnkwuoxeeqixw8/python-characteristic_14.3.0.orig.tar.gz?dl=0"
+SRC_URI = "http://axforum.de/openpli/python-characteristic_14.3.0.orig.tar.gz"
 
 S = "${WORKDIR}/python-characteristic-${PV}"
+
+inherit setuptools
 
 include python-package-split.inc
