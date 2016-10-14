@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "ddf3634d68c34811767a02310e97a7cea8b17dac11773487e55d94421d
 
 PR = "r0"
 
-SRC_URI = "https://www.dropbox.com/s/5qw5nmcngd1yprh/python-attrs_16.0.0.orig.tar.gz?dl=0"
+SRC_URI = "http://axforum.de/openpli/python-attrs_16.0.0.orig.tar.gz"
 
 S = "${WORKDIR}/python-attrs-${PV}"
 
