@@ -58,7 +58,7 @@ do_install() {
     done
 
     install -d ${D}/usr/keys
-    for f in CCcam.cfg SoftCam.Key oscam.conf oscam.keys oscam.provid oscam.server oscam.services oscam.srvid oscam.user softcam.cfg
+    for f in CCcam.cfg SoftCam.Key oscam.conf oscam.keys oscam.provid oscam.server oscam.services oscam.srvid oscam.user softcam.cfg oscam.dvbapi
     do
         install -m 644 ${f} ${D}/usr/keys/${f}
     done
