@@ -7,6 +7,8 @@ BRANCH="branding"
 BRANCH_openmips="Theme"
 BRANCH_openatv="Theme"
 BRANCH_egami="Theme"
+BRANCH_openhdf="Theme"
+BRANCH_opennfr="Theme"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
