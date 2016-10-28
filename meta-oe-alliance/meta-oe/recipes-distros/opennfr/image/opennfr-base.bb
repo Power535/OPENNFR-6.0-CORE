@@ -27,7 +27,7 @@ RDEPENDS_${PN} = "\
     python-requests \
     python-ipaddress  \
     python-netifaces \
-    python-pysmb \
+    python-pysnmp-se \
     ofgwrite \
     libcrypto-compat-0.9.8 \
     python-gdata \
