@@ -10,7 +10,7 @@ inherit packagegroup
 ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
-PV = "6.0"
+PV = "${IMAGE_VERSION}"
 PR = "r0"
 
 RDEPENDS_${PN} = "\
