@@ -39,8 +39,8 @@ RDEPENDS_${PN} = "\
     mjpegtools \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
-    packagegroup-base-smbfs-utils \  
-    samba \    
+    packagegroup-base-smbfs-utils \
+    packagegroup-base-nfs \
     enigma2-plugin-drivers-usbserial \
     bash \
     "

@@ -189,24 +189,36 @@ rootfs_postprocess() {
 			cd $curdir
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+do_package_remove_unused_ipk () {
+    set -x
 
-export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
+    ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
+    unused="*-dbg_* *-dev_* *-staticdev_* *-doc_* *-demos_* *-examples_* *-sourcecode_* *-locale-* *-localedata-*"
 
-do_generate_nfo() {
-			VER=`grep Version: "${IMAGE_ROOTFS}/usr/lib/ipkg/info/enigma2.control" | cut -b 10-26`
-			echo "Enigma2: ${VER}" > ${NFO}
-			echo "Machine: ${MACHINE}" >> ${NFO}
-			DATE=`date +%Y-%m-%d' '%H':'%M`
-			echo "Date: ${DATE}" >> ${NFO}
-			echo "Issuer: OPENNFR" >> ${NFO}
-			echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
-			if [ "${DESC}" != "" ]; then
-					echo "Description: ${DESC}" >> ${NFO}
-					echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
-			fi
-			MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
-			echo "MD5: ${MD5SUM}" >> ${NFO}
+    if [ ! -z "${DEPLOY_KEEP_PACKAGES}" ]; then
+        return
+    fi
+
+    packagedirs="${DEPLOY_DIR_IPK}"
+    for arch in $ipkgarchs; do
+        packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
+    done
+
+    multilib_archs="${MULTILIB_ARCHS}"
+    for arch in $multilib_archs; do
+        packagedirs="$packagedirs ${DEPLOY_DIR_IPK}/$arch"
+    done
+
+    for pkgdir in $packagedirs; do
+        if [ -e $pkgdir/ ]; then
+            for i in ${unused}; do
+                rm -f $pkgdir/$i;
+            done;
+        fi
+    done
 }
 
-addtask generate_nfo after do_rootfs
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+
+
+addtask package_remove_unused_ipk before do_rootfs
