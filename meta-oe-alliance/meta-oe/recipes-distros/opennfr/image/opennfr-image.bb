@@ -188,6 +188,7 @@ rootfs_postprocess() {
 			fi	
 			cd $curdir
 }
+ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
 do_package_remove_unused_ipk () {
     set -x
@@ -218,7 +219,4 @@ do_package_remove_unused_ipk () {
     done
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
-
-
-addtask package_remove_unused_ipk before do_rootfs
+# addtask package_remove_unused_ipk before do_rootfs
