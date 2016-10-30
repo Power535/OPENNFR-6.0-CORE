@@ -1,12 +1,17 @@
-DESCRIPTION = "pli plugins"
-LICENSE = "CLOSED"
+SUMMARY = "3rd Party plugins for Enigma2"
+MAINTAINER = "oe-alliance team"
+
+LICENSE = "Proprietary"
+LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
+
+inherit gitpkgv deploy
+
+DEPENDS = "tslib mpfr gmp"
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r0"
-
-inherit deploy gitpkgv
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -22,8 +27,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
 
-DEPLOY_DIR = "${TMPDIR}/deploy"
-
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-bildonline_3.1rc6_mips32el.ipk \
@@ -33,6 +36,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-chefkoch_1.4rc9_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_10-85-20150429_all.ipk \
+    enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
@@ -48,7 +52,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-hdmitest_0.4_mipsel.ipk \
     enigma2-plugin-extensions-hetweer_3.7r2_all.ipk \
     enigma2-plugin-extensions-iptvbouquet_1.0_r0_all.ipk \
-    enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@base_contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
+    enigma2-plugin-extensions-isettinge2-3.3.8-oe2.0-${@bb.utils.contains("TARGET_ARCH", "sh4", "sh4" , "mips32el", d)}.ipk \
     enigma2-plugin-extensions-kicker_3.4rc10_all.ipk \
     enigma2-plugin-extensions-kino_1.6rc9_all.ipk \
     enigma2-plugin-extensions-kodidirect_3.0_r0_all.ipk \
@@ -58,7 +62,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-moviebrowser_3.6rc9_all.ipk \
     enigma2-plugin-extensions-mp3browser_1.9rc9_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc1_all.ipk \
-    ${@base_contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
+    ${@bb.utils.contains('MACHINE_BRAND', 'Vu+', '' , 'enigma2-plugin-extensions-openopera_1.0-r0_mips32el.ipk', d)} \
     enigma2-plugin-extensions-opkg-tools_1.3_mipsel.ipk \
     enigma2-plugin-extensions-oscamstatusview_0.7rc1_mips32el.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
@@ -106,30 +110,107 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-systemplugins-recinfobar_1.22rc2_mips32el.ipk \
     "
 
-do_install() {
-}
+#     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
+THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vuultimo = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vuduo = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vusolo2 = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vuduo2 = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
+    enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et6x00 = " \
+    enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et6x00.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et7x00 = " \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et7x00.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8000.ipk \
+    enigma2-plugin-systemplugins-autorebootET8000_1.2_mipsel.ipk \
+     "
+THIRDPARTY_MACHINE_PLUGINS_et8500 = " \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et8500.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et9x00 = " \
+    enigma2-plugin-extensions-et-webbrowser_2.0.0-r0_et9x00.ipk \
+    "
+THIRDPARTY_MACHINE_PLUGINS_et10000 = " \
+    enigma2-plugin-extensions-newxtrend-hbbtv_4.0-r0_et10000.ipk \
+     "
+THIRDPARTY_MACHINE_PLUGINS_ultramini = " \
+    ${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'enigma2-plugin-extensions-hbbtv-et7x00mini_2.0-r0_et7x00mini.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'enigma2-plugin-extensions-hbbtv-xpeedc_2.0-r0_xpeedlxcc.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'enigma2-plugin-extensions-hbbtv-xpeedlxcs2_2.0-r0_xpeedlxcs2.ipk' , '', d)} \
+    "
+
+THIRDPARTY_MACHINE_PLUGINS_g300 = " \
+    ${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'enigma2-plugin-extensions-hbbtv-octagon_1.0_mips32el.ipk' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'enigma2-plugin-extensions-hbbtv-miracle_1.0_mips32el.ipk' , '', d)} \
+    "
+
+do_install[noexec] = "1"
+do_package_write_ipk[noexec] = "1"
+
 python populate_packages_prepend () {
-    p = ""
+    pkg  = ""
+    pkgs = ""
     plugins = bb.data.getVar('THIRDPARTY_PLUGINS', d, 1)
+    if bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1) is not None:
+        plugins += bb.data.getVar('THIRDPARTY_MACHINE_PLUGINS', d, 1)
+    if bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1) is not None:
+        plugins += bb.data.getVar('THIRDPARTY_EXTRA_PLUGINS', d, 1)
 
     if plugins is not None:
         for package in plugins.split():
-            p += package.split('_')[0] + " "
+            pkg = package.split('_')[0]
+            pkgs += pkg + " "
+            bb.data.setVar('ALLOW_EMPTY_' + pkg, '1', d)
 
-    bb.data.setVar('PACKAGES', p, d)
+    bb.data.setVar('PACKAGES', pkgs, d)
 }
 
 do_deploy() {
-    install -d 0755 ${WORKDIR}/deploy-ipk/3rdparty
-
-    for i in ${PLI_PLUGINS}; do
+    rm -rf ${DEPLOY_DIR_IPK}/3rdparty
+    rm -rf ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
+    install -d 0755 ${DEPLOY_DIR_IPK}/3rdparty
+    install -d 0755 ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
+    for i in ${THIRDPARTY_PLUGINS}; do
         if [ -f $i ]; then
-            install -m 0644 $i ${WORKDIR}/deploy-ipk/3rdparty;
-            install -m 0644 $i ${DEPLOY_DIR}/ipk/3rdparty;
+            install -m 0644 $i ${DEPLOY_DIR_IPK}/3rdparty;
         fi
     done;
-
+    for i in ${THIRDPARTY_MACHINE_PLUGINS}; do
+        if [ -f $i ]; then
+            install -m 0644 $i ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty;
+        fi
+    done;
+    for i in ${THIRDPARTY_EXTRA_PLUGINS}; do
+        if [ -f $i ]; then
+            install -m 0644 $i ${DEPLOY_DIR_IPK}/3rdparty;
+        fi
+    done;
     pkgdir=${DEPLOY_DIR_IPK}/3rdparty
+    if [ -e $pkgdir ]; then
+        chmod 0755 $pkgdir
+    fi
+    pkgdir=${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
     if [ -e $pkgdir ]; then
         chmod 0755 $pkgdir
     fi
