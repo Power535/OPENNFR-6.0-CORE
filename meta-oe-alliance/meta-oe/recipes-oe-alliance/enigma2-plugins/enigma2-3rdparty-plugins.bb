@@ -36,7 +36,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-chefkoch_1.4rc9_all.ipk \
     enigma2-plugin-extensions-clevertanken_0.7rc1_all.ipk \
     enigma2-plugin-extensions-csfd_10-85-20150429_all.ipk \
-    enigma2-plugin-extensions-customsubservices_0.1.2_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-digitalfernsehen_1.1rc10_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_1.14_all.ipk \
