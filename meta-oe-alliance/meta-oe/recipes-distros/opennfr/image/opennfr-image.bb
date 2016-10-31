@@ -14,8 +14,6 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR[vardepsxeclude] += "DATE"
-
 IMAGE_INSTALL = "opennfr-base \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
