@@ -185,6 +185,12 @@ rootfs_postprocess() {
 				rm -rf ${IMAGE_ROOTFS}/usr/lib/enigma2/python/Plugins/Extensions/NFR4XBoot/ubi_reader/ubifs/lzo.so.tar.gz
 			fi	
 			cd $curdir
+			
+	
+    # Speedup boot by reducing the host key size. The time it takes grows
+    # exponentially by key size, the default is 2k which takes several
+    # seconds on most boxes.
+    echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear		
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
