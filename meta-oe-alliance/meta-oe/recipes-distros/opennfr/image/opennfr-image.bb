@@ -11,7 +11,9 @@ file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "${BUILD_VERSION}"
+PR = "r${DATE}"
+PR[vardepsxeclude] += "DATE"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 IMAGE_INSTALL = "opennfr-base \
