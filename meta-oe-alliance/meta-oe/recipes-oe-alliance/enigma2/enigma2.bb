@@ -12,6 +12,7 @@ DEPENDS = " \
     openssl \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
     tuxtxt-enigma2 \
@@ -139,6 +140,7 @@ RDEPENDS_${PN} += " \
     libdreamdvd \
     ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \    
     "
 RRECOMMENDS_${PN} += "libdvdcss"
 
@@ -182,7 +184,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${ENIGMA2_URI}"
 
