@@ -6,9 +6,20 @@ MAINTAINER = "OPENNFR team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r${DATE}${TIME}"
-PR[vardepsxeclude] += "DATETIME"
+PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+DEPENDS = " \
+    oe-alliance-base \
+    oe-alliance-enigma2 \
+    oe-alliance-wifi \
+    oe-alliance-feeds \
+    ${DISTRO}-base \
+    ${DISTRO}-version-info \
+    "
+
+PR[vardepsxeclude] += "DATE"
+
 
 IMAGE_INSTALL = "opennfr-base \
     packagegroup-base-smbfs-client \
@@ -18,7 +29,6 @@ IMAGE_INSTALL = "opennfr-base \
     "
     
 export IMAGE_BASENAME = "opennfr-image"
-IMAGE_BASENAME[vardepsexclude] = "DATETIME"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"	
