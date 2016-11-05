@@ -18,6 +18,7 @@ IMAGE_INSTALL = "opennfr-base \
     "
     
 export IMAGE_BASENAME = "opennfr-image"
+IMAGE_BASENAME[vardepsexclude] = "DATETIME"
 IMAGE_LINGUAS = ""
 
 IMAGE_FEATURES += "package-management"	
