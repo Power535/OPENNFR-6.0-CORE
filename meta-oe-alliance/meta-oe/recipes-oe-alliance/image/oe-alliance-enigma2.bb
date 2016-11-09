@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
 
@@ -24,6 +24,7 @@ RDEPENDS_${PN} = "\
     mtd-utils \
     ${@bb.utils.contains('MACHINE', 'dm800', '', 'mtd-utils-ubifs', d)} \
     ${@bb.utils.contains('MACHINE', 'vusolo4k', 'bzip2', '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sf4008', 'bzip2', '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2', '', d)} \
     procps \
     parted \
