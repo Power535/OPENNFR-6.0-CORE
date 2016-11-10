@@ -6,8 +6,10 @@ MAINTAINER = "OPENNFR team"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "${BUILD_VERSION}"
+PR = "${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+PR[vardepsxeclude] += "DATE"
 
 DEPENDS = " \
     oe-alliance-base \
@@ -18,9 +20,6 @@ DEPENDS = " \
     ${DISTRO}-base \
     ${DISTRO}-version-info \
     "
-
-PR[vardepsxeclude] += "DATE"
-
 
 IMAGE_INSTALL = "opennfr-base \
     packagegroup-base-smbfs-client \
