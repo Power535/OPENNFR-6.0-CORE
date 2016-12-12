@@ -10,12 +10,13 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR[vardepsxeclude] += "DATE"
+PR[vardepsexclude] += "DATE"
 
 IMAGE_INSTALL = "openspa-base \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
     " \
     packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
     packagegroup-base-smbfs \
     packagegroup-base-nfs \
     ", d)} \

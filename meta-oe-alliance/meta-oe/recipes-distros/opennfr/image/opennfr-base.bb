@@ -43,5 +43,6 @@ RDEPENDS_${PN} = "\
     packagegroup-base-nfs \
     enigma2-plugin-drivers-usbserial \
     bash \
-    ${@bb.utils.contains("TUNE_FEATURES", "armv7a", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     "

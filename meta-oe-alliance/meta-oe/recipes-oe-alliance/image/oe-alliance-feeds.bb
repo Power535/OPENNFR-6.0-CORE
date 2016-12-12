@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -38,8 +38,9 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream" , "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "sh4", "" , "gdb v4l-utils", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-et-livestream exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "sh4", "exteplayer3 enigma2-plugin-systemplugins-serviceapp" , "gdb v4l-utils", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vukodi", "enigma2-plugin-extensions-vuplus-kodi", "", d)} \
@@ -88,17 +89,21 @@ RDEPENDS_${PN} = " \
     pcsc-lite \
     procps \
     pyload \
+    python-attr \
+    python-attrs \
     python-circuits \
     python-circuits-bricks \
     python-cfscrape \
     python-cocy \
     python-futures \
+    python-ipaddress \
     python-js2py \
     python-mechanize \
+    python-pyasn1-modules \
     python-requests \
+    python-service-identity \
     python-ujson \
-    python-singledispatch \
-    python-service-identity \   
+    python-singledispatch \ 
     rsync \
     rtorrent \
     sabnzbd \
@@ -117,6 +122,7 @@ RDEPENDS_${PN} = " \
     "
 
 RDEPENDS_${PN}_remove_wetekplay = "network-usb-drivers-meta"
+RDEPENDS_${PN}_remove_wetekplay2 = "network-usb-drivers-meta"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"

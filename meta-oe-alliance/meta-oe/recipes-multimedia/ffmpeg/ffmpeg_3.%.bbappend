@@ -3,9 +3,7 @@ RSUGGESTS_${PN} = ""
 PROVIDES =+ " libavcodec53 libavformat53 libav"
 PACKAGES =+ " libavcodec53 libavformat53 libav"
 
-PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
-
-PR = "r5"
+PR = "r8"
 
 DEPENDS = "libbluray rtmpdump libxml2 openssl librtmp virtual/libsdl"
 RDEPENDS_${PN} = "libbluray rtmpdump libxml2 openssl"

@@ -20,8 +20,6 @@ DEPENDS = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     "
 
-DEPENDS_append_wetekplay = " libdvbcsa libamcodec"
-
 RDEPENDS_${PN} = " \
     alsa-conf \
     enigma2-fonts \
@@ -40,6 +38,7 @@ RRECOMMENDS_${PN} = " \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "${GST_BAD_OPUS}", "", d)} \
     "
 
 PYTHON_RDEPS = " \
@@ -48,6 +47,7 @@ PYTHON_RDEPS = " \
     python-crypt \
     python-fcntl \
     python-lang \
+    python-importlib \
     python-netclient \
     python-netserver \
     python-pickle \
@@ -186,7 +186,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -212,6 +212,10 @@ SRC_URI_append_azboxminime = " \
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
+SRC_URI_append_wetekplay2 = " \
+    file://0001-have-64-bit-action-long-int-update.patch \
+    "
+
 SRC_URI_append_openatv = " \
     file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
@@ -259,6 +263,7 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd400", "--with-colorlcd400" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd480", "--with-colorlcd480" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd720", "--with-colorlcd720" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd800", "--with-colorlcd800" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd96", "--with-bwlcd96" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd128", "--with-bwlcd128" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd140", "--with-bwlcd140" , "", d)} \

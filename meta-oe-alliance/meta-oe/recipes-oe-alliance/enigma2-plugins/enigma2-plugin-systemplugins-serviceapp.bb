@@ -1,5 +1,5 @@
 DESCRIPTION = "serviceapp service for enigma2"
-AUTHOR = "Maros Ondrásek <mx3ldev@gmail.com>"
+AUTHOR = "Maroš Ondrášek <mx3ldev@gmail.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
@@ -8,18 +8,19 @@ RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3"
 RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
-#SRCREV = "${AUTOREV}"
-SRCREV = "cc77ec2621be21db282dcdc70f047f37ab9ac465"
+SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/mx3L/serviceapp.git;branch=master"
 
 S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv pythonnative pkgconfig
 
+CXXFLAGS += " -std=gnu++98"
+
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \

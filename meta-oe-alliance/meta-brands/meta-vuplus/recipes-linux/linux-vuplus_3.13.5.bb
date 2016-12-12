@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = ".4"
 
 SRCREV = ""
 
@@ -32,6 +32,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
     file://linux-tcp_output.patch \
     file://linux-3.13-gcc-4.9.3-build-error-fixed.patch \
+    file://kernel-add-support-for-gcc-5.patch \
     file://rtl8712-fix-warnings.patch \
     file://0001-Support-TBS-USB-drivers-3.13.patch \
     file://0001-STV-Add-PLS-support.patch \

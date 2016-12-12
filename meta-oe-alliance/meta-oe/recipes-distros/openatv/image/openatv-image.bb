@@ -10,6 +10,20 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# FIX distro-image.bb ERROR: Taskhash mismatch - part 1 add packages to build dependencies of distro-image.bb which run on end of build process
+DEPENDS = " \
+    oe-alliance-base \
+    oe-alliance-enigma2 \
+    oe-alliance-wifi \
+    oe-alliance-feeds \
+    enigma2-plugins \
+    ${DISTRO}-base \
+    ${DISTRO}-version-info \
+    "
+
+# FIX distro-image.bb ERROR: Taskhash mismatch - part 2  make sure all do_rm_work tasks of build dependencies are finished before starting do_rootfs of distro-image.bb
+do_rootfs[deptask] = "do_rm_work"
+
 IMAGE_INSTALL = "openatv-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
@@ -28,7 +42,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-rootfs_postprocess() {
+image_preprocess() {
     curdir=$PWD
     cd ${IMAGE_ROOTFS}
 
@@ -44,4 +58,4 @@ rootfs_postprocess() {
     echo 'DROPBEAR_RSAKEY_ARGS="-s 1024"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
+IMAGE_PREPROCESS_COMMAND += "image_preprocess; "

@@ -423,6 +423,9 @@ MACHINEBUILD=mutant51
 else ifeq ($(MACHINEBUILD),ax51)
 MACHINE=hd51
 MACHINEBUILD=ax51
+else ifeq ($(MACHINEBUILD),bre2ze4k)
+MACHINE=hd51
+MACHINEBUILD=bre2ze4k
 
 else ifeq ($(MACHINEBUILD),amiko8900)
 MACHINE=spark
@@ -538,6 +541,9 @@ MACHINEBUILD=zgemmaslc
 else ifeq ($(MACHINEBUILD),zgemmah5)
 MACHINE=h5
 MACHINEBUILD=zgemmah5
+else ifeq ($(MACHINEBUILD),zgemmah52s)
+MACHINE=h5
+MACHINEBUILD=zgemmah52s
 else ifeq ($(MACHINEBUILD),zgemmai55)
 MACHINE=i55
 MACHINEBUILD=zgemmai55
@@ -656,6 +662,9 @@ MACHINEBUILD=gbultrase
 else ifeq ($(MACHINEBUILD),gbultraue)
 MACHINE=gb7362
 MACHINEBUILD=gbultraue
+else ifeq ($(MACHINEBUILD),gbultraueh)
+MACHINE=gb73625
+MACHINEBUILD=gbultraueh
 else ifeq ($(MACHINEBUILD),gbx1)
 MACHINE=gb7362
 MACHINEBUILD=gbx1
@@ -665,6 +674,9 @@ MACHINEBUILD=gbx2
 else ifeq ($(MACHINEBUILD),gbx3)
 MACHINE=gb7362
 MACHINEBUILD=gbx3
+else ifeq ($(MACHINEBUILD),gbx3h)
+MACHINE=gb73625
+MACHINEBUILD=gbx3h
 else ifeq ($(MACHINEBUILD),gbquad)
 MACHINE=gb7356
 MACHINEBUILD=gbquad
