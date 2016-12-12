@@ -44,9 +44,12 @@ class DevtoolBase(oeSelfTest):
                 if var and var in checkvars:
                     needvalue = checkvars.pop(var)
                     if needvalue is None:
-                        self.fail('Variable %s should not appear in recipe')
+                        self.fail('Variable %s should not appear in recipe, but value is being set to "%s"' % (var, value))
                     if isinstance(needvalue, set):
-                        value = set(value.split())
+                        if var == 'LICENSE':
+                            value = set(value.split(' & '))
+                        else:
+                            value = set(value.split())
                     self.assertEqual(value, needvalue, 'values for %s do not match' % var)
 
 
@@ -871,6 +874,8 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         # Check git repo
         self._check_src_repo(tempdir)
+        # Try building just to ensure we haven't broken that
+        bitbake("%s" % testrecipe)
         # Edit / commit local source
         runCmd('echo "/* Foobar */" >> oe-local-files/makedevs.c', cwd=tempdir)
         runCmd('echo "Foo" > oe-local-files/new-local', cwd=tempdir)
@@ -925,6 +930,73 @@ class DevtoolTests(DevtoolBase):
                            (' D', '.*/run-ptest$'),
                            ('??', '.*/new-local$'),
                            ('??', '.*/0001-Add-new-file.patch$')]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+
+    def test_devtool_update_recipe_local_files_3(self):
+        # First, modify the recipe
+        testrecipe = 'devtool-test-localonly'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s' % testrecipe)
+        # Modify one file
+        runCmd('echo "Another line" >> file2', cwd=os.path.join(self.workspacedir, 'sources', testrecipe, 'oe-local-files'))
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s/file2$' % testrecipe)]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+
+    def test_devtool_update_recipe_local_patch_gz(self):
+        # First, modify the recipe
+        testrecipe = 'devtool-test-patch-gz'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s' % testrecipe)
+        # Modify one file
+        srctree = os.path.join(self.workspacedir, 'sources', testrecipe)
+        runCmd('echo "Another line" >> README', cwd=srctree)
+        runCmd('git commit -a --amend --no-edit', cwd=srctree)
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s/readme.patch.gz$' % testrecipe)]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+        patch_gz = os.path.join(os.path.dirname(recipefile), testrecipe, 'readme.patch.gz')
+        result = runCmd('file %s' % patch_gz)
+        if 'gzip compressed data' not in result.output:
+            self.fail('New patch file is not gzipped - file reports:\n%s' % result.output)
+
+    def test_devtool_update_recipe_local_files_subdir(self):
+        # Try devtool extract on a recipe that has a file with subdir= set in
+        # SRC_URI such that it overwrites a file that was in an archive that
+        # was also in SRC_URI
+        # First, modify the recipe
+        testrecipe = 'devtool-test-subdir'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s' % testrecipe)
+        testfile = os.path.join(self.workspacedir, 'sources', testrecipe, 'testfile')
+        self.assertTrue(os.path.exists(testfile), 'Extracted source could not be found')
+        with open(testfile, 'r') as f:
+            contents = f.read().rstrip()
+        self.assertEqual(contents, 'Modified version', 'File has apparently not been overwritten as it should have been')
+        # Test devtool update-recipe without modifying any files
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = []
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
     @testcase(1163)
@@ -1346,3 +1418,63 @@ class DevtoolTests(DevtoolBase):
         files.remove(foundpatch)
         if files:
             self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
+
+    def test_devtool_rename(self):
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        # First run devtool add
+        # We already have this recipe in OE-Core, but that doesn't matter
+        recipename = 'i2c-tools'
+        recipever = '3.1.2'
+        recipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, recipever))
+        url = 'http://downloads.yoctoproject.org/mirror/sources/i2c-tools-%s.tar.bz2' % recipever
+        def add_recipe():
+            result = runCmd('devtool add %s' % url)
+            self.assertTrue(os.path.exists(recipefile), 'Expected recipe file not created')
+            self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', recipename)), 'Source directory not created')
+            checkvars = {}
+            checkvars['S'] = None
+            checkvars['SRC_URI'] = url.replace(recipever, '${PV}')
+            self._test_recipe_contents(recipefile, checkvars, [])
+        add_recipe()
+        # Now rename it - change both name and version
+        newrecipename = 'mynewrecipe'
+        newrecipever = '456'
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', newrecipename, '%s_%s.bb' % (newrecipename, newrecipever))
+        result = runCmd('devtool rename %s %s -V %s' % (recipename, newrecipename, newrecipever))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipename)), 'Old recipe directory still exists')
+        newsrctree = os.path.join(self.workspacedir, 'sources', newrecipename)
+        self.assertTrue(os.path.exists(newsrctree), 'Source directory not renamed')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/%s-%s' % (recipename, recipever)
+        checkvars['SRC_URI'] = url
+        self._test_recipe_contents(newrecipefile, checkvars, [])
+        # Try again - change just name this time
+        result = runCmd('devtool reset -n %s' % newrecipename)
+        shutil.rmtree(newsrctree)
+        add_recipe()
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', newrecipename, '%s_%s.bb' % (newrecipename, recipever))
+        result = runCmd('devtool rename %s %s' % (recipename, newrecipename))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipename)), 'Old recipe directory still exists')
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', newrecipename)), 'Source directory not renamed')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/%s-${PV}' % recipename
+        checkvars['SRC_URI'] = url.replace(recipever, '${PV}')
+        self._test_recipe_contents(newrecipefile, checkvars, [])
+        # Try again - change just version this time
+        result = runCmd('devtool reset -n %s' % newrecipename)
+        shutil.rmtree(newsrctree)
+        add_recipe()
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, newrecipever))
+        result = runCmd('devtool rename %s -V %s' % (recipename, newrecipever))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', recipename)), 'Source directory no longer exists')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/${BPN}-%s' % recipever
+        checkvars['SRC_URI'] = url
+        self._test_recipe_contents(newrecipefile, checkvars, [])

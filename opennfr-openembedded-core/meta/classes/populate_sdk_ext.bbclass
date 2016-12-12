@@ -77,7 +77,7 @@ COREBASE_FILES ?= " \
 
 SDK_DIR_task-populate-sdk-ext = "${WORKDIR}/sdk-ext"
 B_task-populate-sdk-ext = "${SDK_DIR}"
-TOOLCHAINEXT_OUTPUTNAME = "${SDK_NAME}-toolchain-ext-${SDK_VERSION}"
+TOOLCHAINEXT_OUTPUTNAME ?= "${SDK_NAME}-toolchain-ext-${SDK_VERSION}"
 TOOLCHAIN_OUTPUTNAME_task-populate-sdk-ext = "${TOOLCHAINEXT_OUTPUTNAME}"
 
 SDK_EXT_TARGET_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.target.manifest"
@@ -88,7 +88,7 @@ SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar(
 def clean_esdk_builddir(d, sdkbasepath):
     """Clean up traces of the fake build for create_filtered_tasklist()"""
     import shutil
-    cleanpaths = 'cache conf/sanity_info conf/templateconf.cfg tmp'.split()
+    cleanpaths = 'cache conf/sanity_info tmp'.split()
     for pth in cleanpaths:
         fullpth = os.path.join(sdkbasepath, pth)
         if os.path.isdir(fullpth):
@@ -344,6 +344,10 @@ python copy_buildsystem () {
                     if line.strip() and not line.startswith('#'):
                         f.write(line)
 
+    # Write a templateconf.cfg
+    with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
+        f.write('meta/conf\n')
+
     # Ensure any variables set from the external environment (by way of
     # BB_ENV_EXTRAWHITE) are set in the SDK's configuration
     extralines = []
@@ -502,9 +506,10 @@ install_tools() {
 	done
 	# We can't use the same method as above because files in the sysroot won't exist at this point
 	# (they get populated from sstate on installation)
-	if [ "${SDK_INCLUDE_TOOLCHAIN}" == "1" ] ; then
+	unfsd_path="${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/unfsd"
+	if [ "${SDK_INCLUDE_TOOLCHAIN}" == "1" -a ! -e $unfsd_path ] ; then
 		binrelpath=${@os.path.relpath(d.getVar('STAGING_BINDIR_NATIVE',True), d.getVar('TOPDIR', True))}
-		lnr ${SDK_OUTPUT}/${SDKPATH}/$binrelpath/unfsd ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/unfsd
+		lnr ${SDK_OUTPUT}/${SDKPATH}/$binrelpath/unfsd $unfsd_path
 	fi
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
