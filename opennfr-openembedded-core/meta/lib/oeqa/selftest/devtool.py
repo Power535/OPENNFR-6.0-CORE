@@ -439,7 +439,15 @@ class DevtoolTests(DevtoolBase):
         # Try building
         bitbake('mdadm')
         # Try making (minor) modifications to the source
-        result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % os.path.join(tempdir, 'mdadm.8.in'))
+        modfile = os.path.join(tempdir, 'mdadm.8.in')
+        result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % modfile)
+        sedline = ''
+        with open(modfile, 'r') as f:
+            for line in f:
+                if line.startswith('.TH'):
+                    sedline = line.rstrip()
+                    break
+        self.assertEqual(sedline, '.TH MDADM 8 "" v9.999-custom', 'man .in file not modified (sed failed)')
         bitbake('mdadm -c package')
         pkgd = get_bb_var('PKGD', 'mdadm')
         self.assertTrue(pkgd, 'Could not query PKGD variable')
@@ -447,10 +455,11 @@ class DevtoolTests(DevtoolBase):
         self.assertTrue(mandir, 'Could not query mandir variable')
         if mandir[0] == '/':
             mandir = mandir[1:]
-        with open(os.path.join(pkgd, mandir, 'man8', 'mdadm.8'), 'r') as f:
+        manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
+        with open(manfile, 'r') as f:
             for line in f:
                 if line.startswith('.TH'):
-                    self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % os.path.join(pkgd, mandir, 'man8', 'mdadm.8'))
+                    self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % manfile)
         # Test devtool reset
         stampprefix = get_bb_var('STAMP', 'mdadm')
         result = runCmd('devtool reset mdadm')
@@ -1262,6 +1271,49 @@ class DevtoolTests(DevtoolBase):
         s = "Microsoft Made No Profit From Anyone's Zunes Yo"
         result = runCmd("devtool --quiet selftest-reverse \"%s\"" % s)
         self.assertEqual(result.output, s[::-1])
+
+    def _copy_file_with_cleanup(self, srcfile, basedstdir, *paths):
+        dstdir = basedstdir
+        self.assertTrue(os.path.exists(dstdir))
+        for p in paths:
+            dstdir = os.path.join(dstdir, p)
+            if not os.path.exists(dstdir):
+                os.makedirs(dstdir)
+                self.track_for_cleanup(dstdir)
+        dstfile = os.path.join(dstdir, os.path.basename(srcfile))
+        if srcfile != dstfile:
+            shutil.copy(srcfile, dstfile)
+            self.track_for_cleanup(dstfile)
+
+    def test_devtool_load_plugin(self):
+        """Test that devtool loads only the first found plugin in BBPATH."""
+
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        devtool = runCmd("which devtool")
+        fromname = runCmd("devtool --quiet pluginfile")
+        srcfile = fromname.output
+        bbpath = get_bb_var('BBPATH')
+        searchpath = bbpath.split(':') + [os.path.dirname(devtool.output)]
+        plugincontent = []
+        with open(srcfile) as fh:
+            plugincontent = fh.readlines()
+        try:
+            self.assertIn('meta-selftest', srcfile, 'wrong bbpath plugin found')
+            for path in searchpath:
+                self._copy_file_with_cleanup(srcfile, path, 'lib', 'devtool')
+            result = runCmd("devtool --quiet count")
+            self.assertEqual(result.output, '1')
+            result = runCmd("devtool --quiet multiloaded")
+            self.assertEqual(result.output, "no")
+            for path in searchpath:
+                result = runCmd("devtool --quiet bbdir")
+                self.assertEqual(result.output, path)
+                os.unlink(os.path.join(result.output, 'lib', 'devtool', 'bbpath.py'))
+        finally:
+            with open(srcfile, 'w') as fh:
+                fh.writelines(plugincontent)
 
     def _setup_test_devtool_finish_upgrade(self):
         # Check preconditions

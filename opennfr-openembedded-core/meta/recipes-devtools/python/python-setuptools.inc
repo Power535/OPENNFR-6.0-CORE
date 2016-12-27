@@ -9,8 +9,8 @@ SRCNAME = "setuptools"
 
 SRC_URI = "https://files.pythonhosted.org/packages/source/s/${SRCNAME}/${SRCNAME}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "43d6eb25f60e8a2682a8f826ce9e3f42"
-SRC_URI[sha256sum] = "432a1ad4044338c34c2d09b0ff75d509b9849df8cf329f4c1c7706d9c2ba3c61"
+SRC_URI[md5sum] = "66da89eeb1f33c2b947f316cfb3d7c7e"
+SRC_URI[sha256sum] = "0818cc0de692c3a5c83ca83aa7ec7ba6bc206f278735f1e0267b8d0e095cfe7a"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/setuptools"
 
