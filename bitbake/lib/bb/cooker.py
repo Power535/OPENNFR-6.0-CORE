@@ -252,6 +252,10 @@ class BBCooker:
         signal.signal(signal.SIGHUP, self.sigterm_exception)
 
     def config_notifications(self, event):
+        if event.maskname == "IN_Q_OVERFLOW":
+            bb.warn("inotify event queue overflowed, invalidating caches.")
+            self.baseconfig_valid = False
+            return
         if not event.pathname in self.configwatcher.bbwatchedfiles:
             return
         if not event.pathname in self.inotify_modified_files:
@@ -259,6 +263,10 @@ class BBCooker:
         self.baseconfig_valid = False
 
     def notifications(self, event):
+        if event.maskname == "IN_Q_OVERFLOW":
+            bb.warn("inotify event queue overflowed, invalidating caches.")
+            self.parsecache_valid = False
+            return
         if not event.pathname in self.inotify_modified_files:
             self.inotify_modified_files.append(event.pathname)
         self.parsecache_valid = False
@@ -350,6 +358,7 @@ class BBCooker:
         self.databuilder.parseBaseConfiguration()
         self.data = self.databuilder.data
         self.data_hash = self.databuilder.data_hash
+        self.extraconfigdata = {}
 
         if consolelog:
             self.data.setVar("BB_CONSOLELOG", consolelog)
@@ -358,9 +367,7 @@ class BBCooker:
         # Copy of the data store which has been expanded.
         # Used for firing events and accessing variables where expansion needs to be accounted for
         #
-        self.expanded_data = bb.data.createCopy(self.data)
-        bb.data.update_data(self.expanded_data)
-        bb.parse.init_parser(self.expanded_data)
+        bb.parse.init_parser(self.data)
 
         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
             self.disableDataTracking()
@@ -575,13 +582,12 @@ class BBCooker:
 
     def showVersions(self):
 
-        pkg_pn = self.recipecaches[''].pkg_pn
-        (latest_versions, preferred_versions) = bb.providers.findProviders(self.data, self.recipecaches[''], pkg_pn)
+        (latest_versions, preferred_versions) = self.findProviders()
 
         logger.plain("%-35s %25s %25s", "Recipe Name", "Latest Version", "Preferred Version")
         logger.plain("%-35s %25s %25s\n", "===========", "==============", "=================")
 
-        for p in sorted(pkg_pn):
+        for p in sorted(self.recipecaches[''].pkg_pn):
             pref = preferred_versions[p]
             latest = latest_versions[p]
 
@@ -611,7 +617,7 @@ class BBCooker:
             fn = self.matchFile(fn)
             fn = bb.cache.realfn2virtual(fn, cls, mc)
         elif len(pkgs_to_build) == 1:
-            ignore = self.expanded_data.getVar("ASSUME_PROVIDED") or ""
+            ignore = self.data.getVar("ASSUME_PROVIDED") or ""
             if pkgs_to_build[0] in set(ignore.split()):
                 bb.fatal("%s is in ASSUME_PROVIDED" % pkgs_to_build[0])
 
@@ -657,6 +663,8 @@ class BBCooker:
         # A task of None means use the default task
         if task is None:
             task = self.configuration.cmd
+        if not task.startswith("do_"):
+            task = "do_%s" % task
 
         fulltargetlist = self.checkPackages(pkgs_to_build, task)
         taskdata = {}
@@ -715,6 +723,9 @@ class BBCooker:
         Create a dependency graph of pkgs_to_build including reverse dependency
         information.
         """
+        if not task.startswith("do_"):
+            task = "do_%s" % task
+
         runlist, taskdata = self.prepareTreeData(pkgs_to_build, task)
         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
         rq.rqdata.prepare()
@@ -818,6 +829,9 @@ class BBCooker:
         """
         Create a dependency tree of pkgs_to_build, returning the data.
         """
+        if not task.startswith("do_"):
+            task = "do_%s" % task
+
         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
 
         seen_fns = []
@@ -1068,6 +1082,20 @@ class BBCooker:
         if matches:
             bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.data)
 
+    def findProviders(self, mc=''):
+        return bb.providers.findProviders(self.data, self.recipecaches[mc], self.recipecaches[mc].pkg_pn)
+
+    def findBestProvider(self, pn, mc=''):
+        if pn in self.recipecaches[mc].providers:
+            filenames = self.recipecaches[mc].providers[pn]
+            eligible, foundUnique = bb.providers.filterProviders(filenames, pn, self.data, self.recipecaches[mc])
+            filename = eligible[0]
+            return None, None, None, filename
+        elif pn in self.recipecaches[mc].pkg_pn:
+            return bb.providers.findBestProvider(pn, self.data, self.recipecaches[mc], self.recipecaches[mc].pkg_pn)
+        else:
+            return None, None, None, None
+
     def findConfigFiles(self, varname):
         """
         Find config files which are appropriate values for varname.
@@ -1274,7 +1302,7 @@ class BBCooker:
             bf = os.path.abspath(bf)
 
         self.collection = CookerCollectFiles(self.bbfile_config_priorities)
-        filelist, masked = self.collection.collect_bbfiles(self.data, self.expanded_data)
+        filelist, masked = self.collection.collect_bbfiles(self.data, self.data)
         try:
             os.stat(bf)
             bf = os.path.abspath(bf)
@@ -1305,15 +1333,16 @@ class BBCooker:
             raise NoSpecificMatch
         return matches[0]
 
-    def buildFile(self, buildfile, task):
+    def buildFile(self, buildfile, task, hidewarning=False):
         """
         Build the file matching regexp buildfile
         """
-        bb.event.fire(bb.event.BuildInit(), self.expanded_data)
+        bb.event.fire(bb.event.BuildInit(), self.data)
 
-        # Too many people use -b because they think it's how you normally
-        # specify a target to be built, so show a warning
-        bb.warn("Buildfile specified, dependencies will not be handled. If this is not what you want, do not use -b / --buildfile.")
+        if not hidewarning:
+            # Too many people use -b because they think it's how you normally
+            # specify a target to be built, so show a warning
+            bb.warn("Buildfile specified, dependencies will not be handled. If this is not what you want, do not use -b / --buildfile.")
 
         # Parse the configuration here. We need to do it explicitly here since
         # buildFile() doesn't use the cache
@@ -1322,6 +1351,8 @@ class BBCooker:
         # If we are told to do the None task then query the default task
         if (task == None):
             task = self.configuration.cmd
+        if not task.startswith("do_"):
+            task = "do_%s" % task
 
         fn, cls, mc = bb.cache.virtualfn2realfn(buildfile)
         fn = self.matchFile(fn)
@@ -1358,8 +1389,6 @@ class BBCooker:
         # Invalidate task for target if force mode active
         if self.configuration.force:
             logger.verbose("Invalidate task %s, %s", task, fn)
-            if not task.startswith("do_"):
-                task = "do_%s" % task
             bb.parse.siggen.invalidate_task(task, self.recipecaches[mc], fn)
 
         # Setup taskdata structure
@@ -1368,11 +1397,9 @@ class BBCooker:
         taskdata[mc].add_provider(self.data, self.recipecaches[mc], item)
 
         buildname = self.data.getVar("BUILDNAME")
-        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.expanded_data)
+        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.data)
 
         # Execute the runqueue
-        if not task.startswith("do_"):
-            task = "do_%s" % task
         runlist = [[mc, item, task, fn]]
 
         rq = bb.runqueue.RunQueue(self, self.data, self.recipecaches, taskdata, runlist)
@@ -1400,7 +1427,7 @@ class BBCooker:
                 return False
 
             if not retval:
-                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, item, failures, interrupted), self.expanded_data)
+                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runtaskentries), buildname, item, failures, interrupted), self.data)
                 self.command.finishAsyncCommand(msg)
                 return False
             if retval is True:
@@ -1455,7 +1482,7 @@ class BBCooker:
 
         packages = [target if ':' in target else '%s:%s' % (target, task) for target in targets]
 
-        bb.event.fire(bb.event.BuildInit(packages), self.expanded_data)
+        bb.event.fire(bb.event.BuildInit(packages), self.data)
 
         taskdata, runlist = self.buildTaskData(targets, task, self.configuration.abort)
 
@@ -1488,7 +1515,7 @@ class BBCooker:
                 v = self.data.getVar(k, expand)
                 if not k.startswith("__") and not isinstance(v, bb.data_smart.DataSmart):
                     dump[k] = {
-    'v' : v ,
+    'v' : str(v) ,
     'history' : self.data.varhistory.variable(k),
                     }
                     for d in flaglist:
@@ -1593,7 +1620,7 @@ class BBCooker:
                     self.recipecaches[mc].ignored_dependencies.add(dep)
 
             self.collection = CookerCollectFiles(self.bbfile_config_priorities)
-            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.expanded_data)
+            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.data)
 
             self.parser = CookerParser(self, filelist, masked)
             self.parsecache_valid = True
@@ -1627,7 +1654,7 @@ class BBCooker:
         if len(pkgs_to_build) == 0:
             raise NothingToBuild
 
-        ignore = (self.expanded_data.getVar("ASSUME_PROVIDED") or "").split()
+        ignore = (self.data.getVar("ASSUME_PROVIDED") or "").split()
         for pkg in pkgs_to_build:
             if pkg in ignore:
                 parselog.warning("Explicit target \"%s\" is in ASSUME_PROVIDED, ignoring" % pkg)
@@ -1660,13 +1687,13 @@ class BBCooker:
         try:
             self.prhost = prserv.serv.auto_start(self.data)
         except prserv.serv.PRServiceConfigError:
-            bb.event.fire(CookerExit(), self.expanded_data)
+            bb.event.fire(CookerExit(), self.data)
             self.state = state.error
         return
 
     def post_serve(self):
         prserv.serv.auto_shutdown(self.data)
-        bb.event.fire(CookerExit(), self.expanded_data)
+        bb.event.fire(CookerExit(), self.data)
         lockfile = self.lock.name
         self.lock.close()
         self.lock = None
@@ -1710,6 +1737,13 @@ class BBCooker:
 
     def reset(self):
         self.initConfigurationData()
+
+    def clientComplete(self):
+        """Called when the client is done using the server"""
+        if self.configuration.server_only:
+            self.finishcommand()
+        else:
+            self.shutdown(True)
 
     def lockBitbake(self):
         if not hasattr(self, 'lock'):

@@ -444,3 +444,71 @@ class Contains(unittest.TestCase):
 
         self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x", True, False, self.d))
         self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x y z", True, False, self.d))
+
+
+class Serialize(unittest.TestCase):
+
+    def test_serialize(self):
+        import tempfile
+        import pickle
+        d = bb.data.init()
+        d.enableTracking()
+        d.setVar('HELLO', 'world')
+        d.setVarFlag('HELLO', 'other', 'planet')
+        with tempfile.NamedTemporaryFile(delete=False) as tmpfile:
+            tmpfilename = tmpfile.name
+            pickle.dump(d, tmpfile)
+
+        with open(tmpfilename, 'rb') as f:
+            newd = pickle.load(f)
+
+        os.remove(tmpfilename)
+
+        self.assertEqual(d, newd)
+        self.assertEqual(newd.getVar('HELLO'), 'world')
+        self.assertEqual(newd.getVarFlag('HELLO', 'other'), 'planet')
+
+
+class Remote(unittest.TestCase):
+    def test_remote(self):
+        class TestConnector:
+            d = None
+            def __init__(self, d):
+                self.d = d
+            def getVar(self, name):
+                return self.d._findVar(name)
+            def getKeys(self):
+                return self.d.localkeys()
+            def getVarHistory(self, name):
+                return self.d.varhistory.variable(name)
+            def expandPythonRef(self, varname, expr, d):
+                localdata = self.d.createCopy()
+                for key in d.localkeys():
+                    localdata.setVar(d.getVar(key))
+                varparse = bb.data_smart.VariableParse(varname, localdata)
+                return varparse.python_sub(expr)
+            def setVar(self, name, value):
+                self.d.setVar(name, value)
+
+        d1 = bb.data.init()
+        d1.enableTracking()
+        d2 = bb.data.init()
+        d2.enableTracking()
+        connector = TestConnector(d1)
+
+        d2.setVar('_remote_data', connector)
+
+        d1.setVar('HELLO', 'world')
+        d1.setVarFlag('OTHER', 'flagname', 'flagvalue')
+        self.assertEqual(d2.getVar('HELLO'), 'world')
+        self.assertEqual(d2.expand('${HELLO}'), 'world')
+        self.assertEqual(d2.expand('${@d.getVar("HELLO")}'), 'world')
+        self.assertIn('flagname', d2.getVarFlags('OTHER'))
+        self.assertEqual(d2.getVarFlag('OTHER', 'flagname'), 'flagvalue')
+        self.assertEqual(d1.varhistory.variable('HELLO'), d2.varhistory.variable('HELLO'))
+        # Test setVar on client side affects server
+        d2.setVar('HELLO', 'other-world')
+        self.assertEqual(d1.getVar('HELLO'), 'other-world')
+        # Test client side data is incorporated in python expansion (which is done on server)
+        d2.setVar('FOO', 'bar')
+        self.assertEqual(d2.expand('${@d.getVar("FOO")}'), 'bar')
