@@ -130,7 +130,7 @@ IMAGE_CMD_ubi_append = "\
     cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR6.0/image-zips/; \  
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement directfb sdl skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs\
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb videoenhancement skins1080 feature1 feature2 blindscan-dvbs blindscan-dvbc blindscan-tbs \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvb-c-only' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'dvb-c' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', '9911lx', 'dvb-c' , '', d)} \
