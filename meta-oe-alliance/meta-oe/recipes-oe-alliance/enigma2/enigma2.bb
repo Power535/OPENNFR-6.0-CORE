@@ -40,7 +40,6 @@ RRECOMMENDS_${PN} = " \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "${GST_BAD_OPUS}", "", d)} \
     "
 
 PYTHON_RDEPS = " \
@@ -126,6 +125,7 @@ GST_BAD_RDEPS = " \
     gstreamer1.0-plugins-bad-autoconvert \
     gstreamer1.0-plugins-bad-faac \
     gstreamer1.0-plugins-bad-libmms \
+    gstreamer1.0-plugins-bad-opus \    
     "
 
 GST_UGLY_RDEPS = " \
