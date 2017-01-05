@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 inherit gitpkgv
 
-SRCREV = "28c325e56102fc08c2d30d77ea825be6ce4547e0"
+SRCREV = "7d4d3c1ad02f85103673f416826a829ba5a23951"
 PV = "1.4.52"
 PKGV = "1.4.52+git${GITPKGV}"
+PR = "r1"
 
 SRC_URI = "git://github.com/persianpros/dvbsnoop.git;protocol=git"
 
