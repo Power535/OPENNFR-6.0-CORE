@@ -174,6 +174,8 @@ def package_qa_get_machine_dict(d):
             "linux-gnun32" :       {
                         "mips64":       ( 8,     0,    0,          False,         32),
                         "mips64el":     ( 8,     0,    0,          True,          32),
+                        "mipsisa64r6":  ( 8,     0,    0,          False,         32),
+                        "mipsisa64r6el":( 8,     0,    0,          True,          32),
                       },
         }
 
@@ -334,7 +336,7 @@ def package_qa_check_libdir(d):
     import re
 
     pkgdest = d.getVar('PKGDEST')
-    base_libdir = d.getVar("base_libdir",True) + os.sep
+    base_libdir = d.getVar("base_libdir") + os.sep
     libdir = d.getVar("libdir") + os.sep
     libexecdir = d.getVar("libexecdir") + os.sep
     exec_prefix = d.getVar("exec_prefix") + os.sep
@@ -566,7 +568,7 @@ def package_qa_check_desktop(path, name, d, elf, messages):
     Run all desktop files through desktop-file-validate.
     """
     if path.endswith(".desktop"):
-        desktop_file_validate = os.path.join(d.getVar('STAGING_BINDIR_NATIVE',True),'desktop-file-validate')
+        desktop_file_validate = os.path.join(d.getVar('STAGING_BINDIR_NATIVE'),'desktop-file-validate')
         output = os.popen("%s %s" % (desktop_file_validate, path))
         # This only produces output on errors
         for l in output:

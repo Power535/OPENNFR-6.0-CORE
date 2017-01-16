@@ -107,6 +107,7 @@ include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h5', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h6', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     "
 
 TARGET_ARCH = "mipsel"
@@ -154,3 +155,7 @@ require conf/machine/include/soc-family.inc
 
 # add support for extra feeds
 PACKAGE_ARCHS += " ${MACHINEBUILD}"
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
+

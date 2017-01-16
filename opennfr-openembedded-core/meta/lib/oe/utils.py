@@ -1,9 +1,4 @@
-try:
-    # Python 2
-    import commands as cmdstatus
-except ImportError:
-    # Python 3
-    import subprocess as cmdstatus
+import subprocess
 
 def read_file(filename):
     try:
@@ -35,7 +30,7 @@ def less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
         return falsevalue
 
 def version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-    result = bb.utils.vercmp_string(d.getVar(variable,True), checkvalue)
+    result = bb.utils.vercmp_string(d.getVar(variable), checkvalue)
     if result <= 0:
         return truevalue
     else:
@@ -144,7 +139,7 @@ def packages_filter_out_system(d):
     return pkgs
 
 def getstatusoutput(cmd):
-    return cmdstatus.getstatusoutput(cmd)
+    return subprocess.getstatusoutput(cmd)
 
 
 def trim_version(version, num_parts=2):

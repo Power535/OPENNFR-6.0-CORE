@@ -40,5 +40,7 @@ RDEPENDS_${PN} = "\
     	${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     	${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "webkit-hbbtv-browser", "", d)} \
     	${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \ 
-        ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \       
+        ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
+	RRECOMMENDS_${PN}_append_bre2ze4k = " enigma2-plugin-systemplugins-satipclient"
+	RRECOMMENDS_${PN}_append_bre2ze = " enigma2-plugin-systemplugins-satipclient"       
 	"

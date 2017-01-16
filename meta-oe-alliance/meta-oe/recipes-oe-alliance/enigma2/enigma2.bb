@@ -10,12 +10,12 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ libfribidi libmad libpng libsigc++-1.2 giflib libxml2 libxmlccwrap \
     openssl \
-    ${@bb.utils.contains("DISTRO_NAME", "openmips", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "egami", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openvix", "libudfread", "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openbh", "libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openmips", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "opennfr", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "egami", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "avahi libudfread", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openbh", "avahi libudfread", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "avahi libudfread", "", d)} \
     python python-imaging python-twisted python-wifi \
     swig-native \
@@ -215,6 +215,9 @@ SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
 SRC_URI_append_wetekplay2 = " \
+    file://0001-have-64-bit-action-long-int-update.patch \
+    "
+SRC_URI_append_odroidc2 = " \
     file://0001-have-64-bit-action-long-int-update.patch \
     "
 

@@ -1,4 +1,3 @@
-IMAGE_CLASSES += "sdcard_image-wetek"
 PREFERRED_PROVIDER_virtual/libgles1 = "opengl-amlogic"
 PREFERRED_PROVIDER_virtual/libgles2 = "opengl-amlogic"
 PREFERRED_PROVIDER_virtual/egl = "opengl-amlogic"
@@ -11,4 +10,7 @@ DEPENDS_append_pn-enigma2 = " libdvbcsa libamcodec libamadec"
 EXTRA_OECONF_append_pn-tuxtxt-enigma2 = " --with-fbdev=/dev/fb2"
 CC_append_pn-showiframe = " -DHAVE_AMLOGIC -I${STAGING_INCDIR}/amlogic/amcodec -lamcodec"
 DEPENDS_append_pn-showiframe = " libamcodec"
+
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 

@@ -47,6 +47,7 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-ixuss \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-broadmedia \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-odin \
+	$(CURDIR)/meta-oe-alliance/meta-brands/meta-odroid \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-octagon \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-protek \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-skylake \
@@ -206,9 +207,21 @@ MACHINEBUILD=fusionhdse
 else ifeq ($(MACHINEBUILD),purehd)
 MACHINE=dags7362
 MACHINEBUILD=purehd
+else ifeq ($(MACHINEBUILD),force2nano)
+MACHINE=dags7362
+MACHINEBUILD=force2nano
 else ifeq ($(MACHINEBUILD),force2plushv)
 MACHINE=dags73625
 MACHINEBUILD=force2plushv
+else ifeq ($(MACHINEBUILD),force3uhdplus)
+MACHINE=dags7252
+MACHINEBUILD=force3uhdplus
+else ifeq ($(MACHINEBUILD),force3uhd)
+MACHINE=dags7252
+MACHINEBUILD=force3uhd
+else ifeq ($(MACHINEBUILD),revo4k)
+MACHINE=dags7252
+MACHINEBUILD=revo4k
 
 else ifeq ($(MACHINEBUILD),classm)
 MACHINE=odinm7
@@ -492,6 +505,9 @@ MACHINEBUILD=dynaspark7162
 else ifeq ($(MACHINEBUILD),sf98)
 MACHINE=yh7362
 MACHINEBUILD=sf98
+else ifeq ($(MACHINEBUILD),evoslim)
+MACHINE=yh7362
+MACHINEBUILD=evoslim
 else ifeq ($(MACHINEBUILD),t2cable)
 MACHINE=jj7362
 MACHINEBUILD=t2cable
@@ -556,6 +572,12 @@ MACHINEBUILD=novacombo
 else ifeq ($(MACHINEBUILD),novatwin)
 MACHINE=h3
 MACHINEBUILD=novatwin
+else ifeq ($(MACHINEBUILD),zgemmah3ac)
+MACHINE=h3
+MACHINEBUILD=zgemmah3ac
+else ifeq ($(MACHINEBUILD),zgemmah5ac)
+MACHINE=h5
+MACHINEBUILD=zgemmah5ac
 
 
 else ifeq ($(MACHINEBUILD),mbmicro)
@@ -614,6 +636,9 @@ MACHINEBUILD=sf128
 else ifeq ($(MACHINEBUILD),sf138)
 MACHINE=g100
 MACHINEBUILD=sf138
+else ifeq ($(MACHINEBUILD),bre2zet2c)
+MACHINE=g101
+MACHINEBUILD=bre2zet2c
 
 
 else ifeq ($(MACHINEBUILD),spycat)
@@ -683,6 +708,9 @@ MACHINEBUILD=gbquad
 else ifeq ($(MACHINEBUILD),gbquadplus)
 MACHINE=gb7356
 MACHINEBUILD=gbquadplus
+else ifeq ($(MACHINEBUILD),gbuhdquad)
+MACHINE=gb7252
+MACHINEBUILD=gbuhdquad
 
 else ifeq ($(MACHINEBUILD),xpeedlxcs2)
 MACHINE=ultramini
@@ -701,7 +729,7 @@ initialize: init
 init: setupmbuild $(BBLAYERS) $(CONFFILES)
 
 image: init
-	@. $(TOPDIR)/env.source && cd $(TOPDIR) && bitbake $(DISTRO)-image
+	@. $(TOPDIR)/env.source && cd $(TOPDIR) && echo -n -e "Performing a clean \e[95mPlease wait... \e[0m" && bitbake -qqq -c clean $(DISTRO)-image && echo -n -e "Clean completed. \e[95mNow continuing with build... \e[0m" && bitbake $(DISTRO)-image
 
 update:
 	@echo 'Updating Git repositories...'
@@ -802,7 +830,7 @@ $(CURDIR)/site.conf:
 	@echo 'INHERIT += "rm_work"' >> $@
 
 BBLAYERS_CONF_HASH := $(call hash, \
-	'BBLAYERS_CONF_VERSION = "0"' \
+	'BBLAYERS_CONF_VERSION = "5"' \
 	'CURDIR = "$(CURDIR)"' \
 	'BBLAYERS = "$(BBLAYERS)"' \
 	)
@@ -810,7 +838,7 @@ BBLAYERS_CONF_HASH := $(call hash, \
 $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(BBLAYERS_CONF_HASH)
 	@echo 'Generating $@'
 	@test -d $(@D) || mkdir -p $(@D)
-	@echo 'LCONF_VERSION = "4"' >> $@
+	@echo 'LCONF_VERSION = "4"' > $@
 	@echo 'BBFILES = ""' >> $@
 	@echo 'BBLAYERS = "$(BBLAYERS)"' >> $@
 
