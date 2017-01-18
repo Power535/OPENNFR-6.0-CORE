@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -85,6 +85,7 @@ RDEPENDS_${PN} = " \
     openresolv \
     openssh \
     openvpn \
+    easy-rsa \
     parted \
     pngquant \
     pcsc-lite \
