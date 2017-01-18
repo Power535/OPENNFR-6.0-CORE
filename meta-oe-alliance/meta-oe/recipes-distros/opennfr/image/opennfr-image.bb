@@ -90,19 +90,19 @@ image_preprocess() {
 			cd $curdir
 
 
-			cd ${IMAGE_ROOTFS}/var/lib/opkg/lists
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-3rdparty
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-all
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}_3rdparty
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-mips32el
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINEBUILD}
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sh4
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162_3rdparty
-			rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sparktriplex
-			cd $curdir
+			# cd ${IMAGE_ROOTFS}/var/lib/opkg/lists
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-3rdparty
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-all
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINE}_3rdparty
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-mips32el
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-${MACHINEBUILD}
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sh4
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-spark7162_3rdparty
+			# rm -rf ${IMAGE_ROOTFS}/var/lib/opkg/lists/oe-sparktriplex
+			# cd $curdir
 			
 			cd ${IMAGE_ROOTFS}/etc/network	
 			rm -rf ${IMAGE_ROOTFS}/etc/network/interfaces
