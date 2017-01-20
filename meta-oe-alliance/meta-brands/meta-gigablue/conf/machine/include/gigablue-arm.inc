@@ -4,6 +4,8 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 IMAGE_FSTYPES =+ "tar.bz2"
 
+require conf/machine/include/tune-cortexa15.inc
+
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-amr --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'gb7252', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
