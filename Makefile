@@ -439,6 +439,12 @@ MACHINEBUILD=ax51
 else ifeq ($(MACHINEBUILD),bre2ze4k)
 MACHINE=hd51
 MACHINEBUILD=bre2ze4k
+else ifeq ($(MACHINEBUILD),vimastec1500)
+MACHINE=vs1500
+MACHINEBUILD=vimastec1500
+else ifeq ($(MACHINEBUILD),vimastec1000)
+MACHINE=vs1000
+MACHINEBUILD=vimastec1000
 
 else ifeq ($(MACHINEBUILD),amiko8900)
 MACHINE=spark
@@ -586,6 +592,9 @@ MACHINEBUILD=zgemmah5ac
 else ifeq ($(MACHINEBUILD),mbmicro)
 MACHINE=7000s
 MACHINEBUILD=mbmicro
+else ifeq ($(MACHINEBUILD),mbmicrov2)
+MACHINE=7005s
+MACHINEBUILD=mbmicrov2
 else ifeq ($(MACHINEBUILD),e4hd)
 MACHINE=7000s
 MACHINEBUILD=e4hd
