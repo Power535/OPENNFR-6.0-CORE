@@ -42,6 +42,10 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-utils \
     packagegroup-base-nfs \
     enigma2-plugin-drivers-usbserial \
+    enigma2-plugin-extensions-openwebif-terminal \
+    enigma2-plugin-extensions-openwebif-themes \
+    enigma2-plugin-extensions-openwebif-webtv \
+    enigma2-plugin-extensions-openwebif-vxg \
     bash \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
