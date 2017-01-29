@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r11"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
@@ -86,6 +86,7 @@ RDEPENDS_${PN} = " \
     openssh \
     openvpn \
     easy-rsa \
+    packagegroup-base-samba \
     parted \
     pngquant \
     pcsc-lite \
@@ -109,7 +110,6 @@ RDEPENDS_${PN} = " \
     rsync \
     rtorrent \
     sabnzbd \
-    samba \
     smartmontools \
     smbnetfs \
     sshpass \
