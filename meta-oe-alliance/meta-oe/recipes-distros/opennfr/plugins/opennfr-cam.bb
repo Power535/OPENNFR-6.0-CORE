@@ -52,13 +52,13 @@ do_install() {
     done
 
     install -d ${D}/usr/emu
-    for f in CCcam230.tar.gz oscam.tar.gz oscam_emu-mips.tar.gz oscam-mips.tar.gz
+    for f in CCcam230.tar.gz oscam.tar.gz
     do
         install -m 755 ${f} ${D}/usr/emu/${f}
     done
 
     install -d ${D}/usr/keys
-    for f in CCcam.cfg SoftCam.Key oscam.conf oscam.keys oscam.provid oscam.server oscam.services oscam.srvid oscam.user softcam.cfg oscam.dvbapi
+    for f in CCcam.cfg SoftCam.Key oscam.conf oscam.keys oscam.provid oscam.server oscam.services oscam.srvid oscam.user softcam.cfg oscam.dvbapi oscam.ccache
     do
         install -m 644 ${f} ${D}/usr/keys/${f}
     done

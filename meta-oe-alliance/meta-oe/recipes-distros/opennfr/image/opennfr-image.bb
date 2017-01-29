@@ -121,21 +121,10 @@ image_preprocess() {
 			cd $curdir
 
 			cd ${IMAGE_ROOTFS}/usr/emu
-			if [ "${BRAND_OEM}" = "fulan" ]; then
-				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz				
-			else
-				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
-				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
-				tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam_emu-mips.tar.gz
-				rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam-mips.tar.gz
-			fi	
+			tar xvpzf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+			tar xvpzf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz -C ${IMAGE_ROOTFS}/usr/emu/
+			rm -rf ${IMAGE_ROOTFS}/usr/emu/oscam.tar.gz
+			rm -rf ${IMAGE_ROOTFS}/usr/emu/CCcam230.tar.gz
 			cd $curdir
 
 			cd ${IMAGE_ROOTFS}/usr/lib/python2.7/site-packages/twisted/web
