@@ -32,6 +32,9 @@ SRC_URI_append_inihdp = "file://inihdp/cfe.bmp file://inihdp/finished.bmp file:/
 SRC_URI_append_inihde2 = "file://inihdp/cfe.bmp file://inihdp/finished.bmp file://inihdp/imageversion.bmp file://inihdp/kernel.bmp file://inihdp/rootfs.bmp file://inihdp/splash.bmp"
 SRC_URI_append_dags7356 = "file://splash1.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI_append_dags7362 = "file://splash1_power.bmp file://splash1_os1.bmp file://splash1_os2.bmp file://splash2.bmp file://splash3.bmp"
+
+SRC_URI_append_gbultraueh = "file://gbultraueh/lcdsplash220.bin file://gbultraueh/lcdwaitkey220.bin file://gbultraueh/lcdwarning220.bin file://gbultraueh/lcdcomplete220.bin"
 
 BINARY_VERSION = "1.3"
 
@@ -88,6 +91,16 @@ do_install_append_gbquadplus() {
     install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin
     install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin
 }
+
+do_install_append_gb73625() {
+    install -d ${D}/usr/share
+    install -m 0644 ${S}/gbultraueh/lcdsplash220.bin ${D}/usr/share/lcdsplash.bin
+    install -m 0644 ${S}/gbultraueh/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${S}/gbultraueh/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${S}/gbultraueh/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${S}/gbultraueh/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin    
+}
+
 
 do_install_append_vuduo2() {
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
