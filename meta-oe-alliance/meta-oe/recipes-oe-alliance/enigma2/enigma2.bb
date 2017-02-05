@@ -208,7 +208,6 @@ SRC_URI_append_azboxme = " \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxe2cpp.patch", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_azboxminime = " \
@@ -216,7 +215,6 @@ SRC_URI_append_azboxminime = " \
     file://e2_pcr.patch \
     file://add_more_timeout.patch \
     file://pic_show.patch \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxe2cpp.patch", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
 SRC_URI_append_vuduo = " \

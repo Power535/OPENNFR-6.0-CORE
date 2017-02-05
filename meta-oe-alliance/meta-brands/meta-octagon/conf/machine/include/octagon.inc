@@ -23,7 +23,7 @@ MACHINE_EXTRA_RRECOMMENDS = " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
+DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dtsdownmix --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
@@ -34,7 +34,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "octagon-blindscan-utils"
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb boxmodel feature2 blindscan-tbs blindscan-dvbc"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvbc"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
