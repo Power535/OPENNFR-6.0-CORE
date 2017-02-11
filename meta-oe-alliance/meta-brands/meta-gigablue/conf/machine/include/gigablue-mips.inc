@@ -48,6 +48,7 @@ IMAGE_CMD_ubi_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
+    cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR6.0/image-zips/; \  
     "
 
 IMAGE_CMD_jffs2_prepend = " \
@@ -69,8 +70,7 @@ IMAGE_CMD_jffs2_append = "; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.jffs2; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
-    rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
-    cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR6.0/image-zips/; \  
+    rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \ 
     "
 
 require conf/machine/include/tune-mips32.inc
