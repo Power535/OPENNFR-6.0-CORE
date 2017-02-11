@@ -43,6 +43,7 @@ RRECOMMENDS_${PN} = " \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "${GST_BAD_OPUS}", "", d)} \
     "
 
 PYTHON_RDEPS = " \
@@ -123,7 +124,8 @@ GST_BAD_RDEPS = " \
     gstreamer1.0-plugins-bad-mpegtsdemux \
     gstreamer1.0-plugins-bad-smoothstreaming \
     gstreamer1.0-plugins-bad-faad \
-    gstreamer1.0-plugins-bad-rtmp \    
+    gstreamer1.0-plugins-bad-rtmp \   
+    gstreamer1.0-plugins-bad-hls \ 
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-autoconvert \
     gstreamer1.0-plugins-bad-faac \
@@ -191,7 +193,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "${ENIGMA2_URI}"
 
@@ -270,6 +272,7 @@ EXTRA_OECONF = " \
     --with-machinebuild="${MACHINEBUILD}" \
     --with-libsdl=no \
     --enable-dependency-tracking \
+    ${@bb.utils.contains("GST_VERSION", "1.0", "--with-gstversion=1.0", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \

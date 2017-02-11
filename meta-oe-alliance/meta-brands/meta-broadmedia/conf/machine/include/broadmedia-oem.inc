@@ -96,7 +96,7 @@ IMAGE_CMD_ubi_append = "\
     cp ${DEPLOY_DIR_IMAGE}/*.zip /home/harry/OPENNFR6.0/image-zips/; \    
     "
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel feature1 feature2 blindscan-tbs"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb feature1 feature2 blindscan-tbs"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
