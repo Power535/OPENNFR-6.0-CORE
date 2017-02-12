@@ -29,6 +29,7 @@ BBLAYERS ?= \
 	$(CURDIR)/opennfr-meta-openembedded/meta-python \
 	$(CURDIR)/opennfr-openembedded-core/meta \
 	$(CURDIR)/meta-oe-alliance/meta-oe \
+	$(CURDIR)/meta-qt5 \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-airdigital \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-azbox \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-ax \
@@ -51,6 +52,7 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-octagon \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-protek \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-skylake \
+	$(CURDIR)/meta-oe-alliance/meta-brands/meta-tiviar \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-tripledot \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-ultramini \
 	$(CURDIR)/meta-oe-alliance/meta-brands/meta-vuplus \
