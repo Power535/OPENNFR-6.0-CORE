@@ -93,7 +93,7 @@ do_install_append_gbquadplus() {
     install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin
 }
 
-do_install_append_gb73625() {
+do_install_append_gb7362() {
     install -d ${D}/usr/share
     install -m 0644 ${S}/gbultraue/lcdsplash220.bin ${D}/usr/share/lcdsplash.bin
     install -m 0644 ${S}/gbultraue/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
