@@ -18,7 +18,8 @@ RDEPENDS_${PN} = "\
     opennfr-cam \
     opennfr-settings \    
     openssh-sftp-server \
-    ntfs-3g \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
     busybox-cron \
     python-imaging \

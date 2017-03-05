@@ -39,7 +39,15 @@ RDEPENDS_${PN} = "\
     	${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     	${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     	${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "nextv-hbbtv-browser", " enigma2-plugin-extensions-hbbtv-nextv", "", d)} \
+
+GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+    gstreamer1.0-plugins-bad-videoparsersbad \
+    gstreamer1.0-plugins-bad-mpegtsmux \
+    ', ' \
+    gst-plugins-bad-videoparsersbad \
+    gst-plugins-bad-mpegtsmux \
+    ', d)}"
+
     	${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \ 
         ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
 	"

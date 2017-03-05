@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 RCONFLICTS_${PN} = "distro-feed-configs"
 RREPLACES_${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PR = "r0"
+PR = "r24"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
