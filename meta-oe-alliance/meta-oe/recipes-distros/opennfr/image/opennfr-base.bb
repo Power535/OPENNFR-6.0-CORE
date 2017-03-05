@@ -20,6 +20,7 @@ RDEPENDS_${PN} = "\
     openssh-sftp-server \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 ", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-extensions-programmlistenupdater", d)} \    
     hddtemp \
     busybox-cron \
     python-imaging \
@@ -47,6 +48,7 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
+    enigma2-plugin-extensions-programmlistenupdater    
     bash \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
