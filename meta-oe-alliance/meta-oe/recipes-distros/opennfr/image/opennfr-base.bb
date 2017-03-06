@@ -11,6 +11,7 @@ PR = "r1"
 inherit packagegroup
 
 RDEPENDS_${PN} = "\
+    ca-certificates \
     oe-alliance-base \
     opennfr-enigma2 \
     opennfr-bootlogo \
