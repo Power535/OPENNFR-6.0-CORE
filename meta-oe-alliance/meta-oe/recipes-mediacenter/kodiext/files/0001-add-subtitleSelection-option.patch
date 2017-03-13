@@ -117,11 +117,6 @@ index c566a71..9073c47 100644
          self.close()
  
  def autoStart(reason, **kwargs):
-@@ -476,4 +485,3 @@ def Plugins(**kwargs):
-             PluginDescriptor("Kodi", PluginDescriptor.WHERE_AUTOSTART, "Kodi Launcher", fnc=autoStart),
-             PluginDescriptor("Kodi", PluginDescriptor.WHERE_EXTENSIONSMENU, "Kodi Launcher", fnc=startLauncher),
-             PluginDescriptor("Kodi", PluginDescriptor.WHERE_PLUGINMENU, "Kodi Launcher", fnc=startLauncher)]
--
 -- 
 2.11.1.windows.1
 
