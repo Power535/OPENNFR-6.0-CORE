@@ -98,6 +98,7 @@ GST_BASE_RDEPS = "  \
     gstreamer1.0-plugins-base-subparse \
     gstreamer1.0-plugins-base-typefindfunctions \
     gstreamer1.0-plugins-base-vorbis \
+    gstreamer1.0-plugins-base-rawparse \
     "
 
 GST_GOOD_RDEPS = " \
@@ -196,7 +197,7 @@ inherit autotools-brokensep gitpkgv pkgconfig pythonnative
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
 SRC_URI = "${ENIGMA2_URI}"
 
