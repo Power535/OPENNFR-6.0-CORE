@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://source.mynonpublic.com/broadmedia/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
