@@ -65,7 +65,7 @@ do_install() {
 
 
     install -d ${D}/usr/share/enigma2/defaults
-    for f in bouquets* userbouquet* autotimer.xml cert.pem key.pem lamedb menusort.xml pluginsort.xml subservices.xml
+    for f in bouquets* userbouquet* autotimer.xml cert.pem key.pem lamedb lamedb5 menusort.xml pluginsort.xml subservices.xml blacklist whitelist
     do
         install -m 644 ${f} ${D}/usr/share/enigma2/defaults/${f}
     done
